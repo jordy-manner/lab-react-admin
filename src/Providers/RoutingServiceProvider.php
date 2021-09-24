@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Controller\ApiPostController;
+use League\Route\RouteGroup;
 use Pollen\Container\BootableServiceProvider;
 use Pollen\Routing\RouterInterface;
 use Pollen\Support\Proxy\AssetProxy;
@@ -28,5 +30,10 @@ class RoutingServiceProvider extends BootableServiceProvider
                 return view('index', ['name' => 'John Doe']);
             }
         );
+
+        $router->group('/api', function(RouteGroup $router) {
+            $router->get('posts', [ApiPostController::class, 'list']);
+            $router->get('posts/{id}', [ApiPostController::class, 'show']);
+        });
     }
 }
