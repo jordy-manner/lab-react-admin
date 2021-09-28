@@ -1,0 +1,36 @@
+{
+  "name": "lab-react-admin",
+  "version": "1.0.0",
+  "description": "## Create the API",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "parcel resources/index.html",
+    "build": "parcel build resources/index.html --out-dir public/admin --public-url ./admin/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordy-manner/lab-react-admin.git"
+  },
+  "keywords": [],
+  "author": "Jordy Manner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jordy-manner/lab-react-admin/issues"
+  },
+  "homepage": "https://github.com/jordy-manner/lab-react-admin#readme",
+  "dependencies": {
+    "prop-types": "^15.7.2",
+    "ra-data-json-server": "^3.18.2",
+    "react": "^17.0.2",
+    "react-admin": "^3.18.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "sass": "^1.42.1"
+  }
+}

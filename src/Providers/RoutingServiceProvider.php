@@ -33,6 +33,7 @@ class RoutingServiceProvider extends BootableServiceProvider
 
         $router->group('/api', function(RouteGroup $router) {
             $router->get('posts', [ApiPostController::class, 'list']);
+            //$router->options('posts', [ApiPostController::class, 'list']);
             $router->get('posts/{id}', [ApiPostController::class, 'show']);
         });
     }

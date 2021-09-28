@@ -1,6 +1,6 @@
 # Lab React Admin
 
-## Create the API
+## Create the API server
 
 ### Post list endpoint
 
@@ -25,7 +25,12 @@ class ApiPostController extends BaseController
             'id'    => 1,
             'title' => 'My first title',
             'body'  => 'My first body'
-        ]
+        ],
+        [
+            'id'    => 2,
+            'title' => 'My second title',
+            'body'  => 'My second body',
+        ],
     ];
 
     public function list(): JsonResponseInterface
@@ -78,7 +83,11 @@ class RoutingServiceProvider extends BootableServiceProvider
 }
 ```
 
-5. Visit : http://127.0.0.1:8000/api/posts
+## Launch and test the API server
+
+```bash
+Visit : http://127.0.0.1:8000/api/posts
+```
 
 ```json
 [
@@ -86,6 +95,11 @@ class RoutingServiceProvider extends BootableServiceProvider
     "id": 1,
     "title": "My first title",
     "body": "My first body"
+  },
+  {
+    "id": 2,
+    "title": "My second title",
+    "body": "My second body"
   }
 ]
 ```
@@ -140,4 +154,64 @@ class RoutingServiceProvider extends BootableServiceProvider
   "title": "My first title",
   "body": "My first body"
 }
+```
+
+## NPM Initialisation
+
+```bash
+npm init
+```
+
+```bash
+npm install react react-dom react-admin ra-data-json-server prop-types parcel-bundler
+```
+
+Modify package.json
+
+```json
+{
+  "scripts": {
+    "dev": "parcel resources/index.html",
+    "build": "parcel build resources/index.html",
+  }
+}
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="js/index.js" defer></script>
+</body>
+</html>
+```
+
+```scss
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  monospace;
+}
+```
+
+## Prevent CORS
+
+
+
+
+```bash
+npm run dev
 ```
