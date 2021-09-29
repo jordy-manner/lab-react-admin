@@ -4,27 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Pollen\Database\DatabaseManager as DB;
 use Pollen\Http\JsonResponseInterface;
 use Pollen\Routing\BaseController;
 
 class ApiPostController extends BaseController
 {
-    public array $posts = [
-        [
-            'id'    => 1,
-            'title' => 'My first title',
-            'body'  => 'My first body',
-        ],
-        [
-            'id'    => 2,
-            'title' => 'My second title',
-            'body'  => 'My second body',
-        ],
-    ];
-
     public function list(): JsonResponseInterface
     {
-        $response = $this->json($this->posts);
+        $posts = DB::table('posts')->get()->all();
+
+        $response = $this->json($posts);
 
         // CORS
         /*$response->headers->add([
@@ -32,13 +22,15 @@ class ApiPostController extends BaseController
             'Access-Control-Expose-Headers' => 'Content-Range'
         ]);*/
 
-        $response->headers->set('Content-Range', count($this->posts));
+        $response->headers->set('Content-Range', count($posts));
 
         return $response;
     }
 
     public function show($id): JsonResponseInterface
     {
-        return $this->json($this->posts[0]);
+        $post = DB::table('posts')->where('id', $id)->first();
+
+        return $this->json($post);
     }
 }

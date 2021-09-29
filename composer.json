@@ -19,9 +19,11 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "ext-json": "*",
+    "ext-pdo": "*",
     "composer/installers": "^1.11",
     "pollen-solutions/asset": "^1.0",
     "pollen-solutions/console": "^1.0",
+    "pollen-solutions/database": "^1.0",
     "pollen-solutions/debug": "^1.0",
     "pollen-solutions/kernel": "^1.0",
     "pollen-solutions/view-extends": "^1.0",
