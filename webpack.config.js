@@ -35,6 +35,10 @@ const config = {
   devServer: {
     port: 9000,
     watchFiles: ['resources/views/**/*'],
+    client: {
+      overlay: true,
+      progress: true,
+    }
   }
 }
 

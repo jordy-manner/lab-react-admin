@@ -220,11 +220,12 @@ const config = {
     ]
   },
   devServer: {
-    static: {
-      directory: path.join(__dirname, 'public'),
-    },
-    compress: true,
-    port: 9000
+    port: 9000,
+    watchFiles: ['resources/views/**/*'],
+    client: {
+      overlay: true,
+      progress: true,
+    }
   }
 }
 
