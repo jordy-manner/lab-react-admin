@@ -22,18 +22,20 @@ class RoutingServiceProvider extends BootableServiceProvider
         /** @var RouterInterface $router */
         $router = $this->getContainer()->get(RouterInterface::class);
 
-        $router->get(
-            '/',
-            function () {
-                $this->asset()->enqueueTitle('Welcome');
+        $router->get('/', function () {
+            $this->asset()->enqueueTitle('Welcome');
 
-                return view('index', ['name' => 'John Doe']);
-            }
-        );
+            return view('index', ['name' => 'John Doe']);
+        });
+
+        $router->get('/admin', function () {
+            $this->asset()->enqueueTitle('Admin');
+
+            return view('admin');
+        });
 
         $router->group('/api', function(RouteGroup $router) {
             $router->get('posts', [ApiPostController::class, 'list']);
-            //$router->options('posts', [ApiPostController::class, 'list']);
             $router->get('posts/{id}', [ApiPostController::class, 'show']);
         });
     }

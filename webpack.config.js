@@ -1,10 +1,13 @@
+const path = require('path');
+
 const config = {
   mode: 'development',
   entry: {
-    'app': './resources/js/app.jsx',
-    'admin': './resources/js/admin.jsx'
+    'app': './resources/assets/js/app.jsx',
+    'admin': './resources/assets/js/admin.jsx'
   },
   output: {
+    path: path.resolve(__dirname, 'public/dist'),
     filename: '[name].js',
     publicPath: '/dist/'
   },

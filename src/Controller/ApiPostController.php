@@ -27,10 +27,10 @@ class ApiPostController extends BaseController
         $response = $this->json($this->posts);
 
         // CORS
-        $response->headers->add([
+        /*$response->headers->add([
             'Access-Control-Allow-Origin'   => rtrim($this->httpRequest()->headers->get('referer'), '/'),
             'Access-Control-Expose-Headers' => 'Content-Range'
-        ]);
+        ]);*/
 
         $response->headers->set('Content-Range', count($this->posts));
 

@@ -135,7 +135,7 @@ class ApiPostController extends BaseController
 
 2. Open the RoutingServiceProvider :
 
-```php
+```diff
 <?php
 // ...
 class RoutingServiceProvider extends BootableServiceProvider
@@ -146,7 +146,7 @@ class RoutingServiceProvider extends BootableServiceProvider
         // ...
         $router->group('/api', function(RouteGroup $router) {
             // ...
-            $router->get('posts/{id}', [ApiPostController::class, 'show']);
++            $router->get('posts/{id}', [ApiPostController::class, 'show']);
         });
     }
 }
@@ -188,8 +188,7 @@ const path = require('path')
 const config = {
   mode: 'development',
   entry: {
-    'app': './resources/js/app.jsx',
-    'admin': './resources/js/admin.jsx'
+    'app': './resources/assets/js/app.jsx'
   },
   output: {
     filename: '[name].js',
@@ -244,28 +243,117 @@ module.exports = config
 {
 // ...  
   "scripts": {
-+    "start": "webpack-dev-server --progress --hot",
++    "serve": "webpack serve",
++    "hot": "npm run serve --hot",
   }
 // ...
 }
 ```
 
-```html
+## Create the test layouts
+
+### The Front-end layout
+
+1. Modify resources/views/index.plates.php
+
+```diff
+<?php
+/**
+ * @var Pollen\ViewExtends\PlatesTemplateInterface $this
+ */
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>TEST</title>
-    <script src="./dist/app.js" defer></script>
+    <?php echo $this->asset_head(); ?>
++    <script src="http://localhost:9000/dist/app.js" defer></script>
 </head>
 <body>
-    <div id="root"></div>
+-<h1>Welcome <?php echo $this->get('name'); ?>, from Plates Engine</h1>
++<div id="app" data-username="<?php echo $this->get('name'); ?>"></div>
+<?php echo $this->asset_footer(); ?>
 </body>
 </html>
 ```
 
+2. Create the Front-end entry JS file
+
+Create resources/assets/js/app.jsx entry file.
+
+```jsx
+import React from 'react'
+import {render} from 'react-dom'
+import App from './app/components/App'
+
+const $app = document.getElementById('app')
+const username = $app.dataset.username || 'World'
+
+render(<App username={username}/>, $app)
+```
+
+3. Create the Front-end react component
+
+Create resources/assets/js/app/components/App.jsx component file.
+
+```jsx
+import React from 'react'
+
+export default function ({username}) {
+  return <h1>Hello {username} !</h1>
+}
+```
+
+4. Start the webpack dev server
+
 Webpack Dev Server serve assets in memory, to check assets generation visit :
 http://localhost:9000/webpack-dev-server
+
+5. Visit : http://localhost:8000
+
+### The Back-end layout
+
+1. Create resources/views/admin.plates.php
+
+```php
+<?php
+/**
+ * @var Pollen\ViewExtends\PlatesTemplateInterface $this
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php echo $this->asset_head(); ?>
+    <script src="http://localhost:9000/dist/app.js" defer></script>
+</head>
+<body>
+<div id="app"></div>
+<?php echo $this->asset_footer(); ?>
+</body>
+</html>
+```
+
+2. Create the admin route
+
+Change the RoutingServiceProvider
+
+```diff
+<?php
+// ...
+class RoutingServiceProvider extends BootableServiceProvider
+{
+    // ...
+    public function boot(): void
+    {
+        // ...
++        $router->get('/admin', function () {
++            $this->asset()->enqueueTitle('Admin');
++            return view('admin');
++        });
+        // ...
+    }
+}
+```
 
 
 ```scss
@@ -284,4 +372,6 @@ code {
 }
 ```
 
-## Prevent CORS
+## Prevent CORS errors
+
+https://developer.mozilla.org/docs/Web/HTTP/CORS/Errors

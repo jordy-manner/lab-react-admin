@@ -1,6 +1,6 @@
 import React from 'react'
 import {render} from 'react-dom'
-import App from './app/App.jsx'
-import '../scss/app.scss'
+import App from './admin/components/App'
+import '../scss/admin.scss'
 
 render(<App/>, document.getElementById('app'))
