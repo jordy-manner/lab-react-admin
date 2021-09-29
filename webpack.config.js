@@ -33,7 +33,8 @@ const config = {
     ]
   },
   devServer: {
-    port: 9000
+    port: 9000,
+    watchFiles: ['resources/views/**/*'],
   }
 }
 

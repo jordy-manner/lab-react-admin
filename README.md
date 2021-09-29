@@ -16,9 +16,9 @@ php -S localhost:8000 -t public
 
 ### Post list endpoint
 
-1. Create a src/Controller directory.
-2. Create an ApiPostController.php file.
-3. Write the ApiPostController and create the post list method :
+1. Create a **src/Controller** directory.
+2. Create a **src/Controller/ApiPostController.php** file.
+3. Write the **ApiPostController** class and create the post list method :
 
 ```php
 <?php
@@ -52,7 +52,7 @@ class ApiPostController extends BaseController
 }
 ```
 
-4. Open src/Providers/RoutingServiceProvider.php
+4. Open **src/Providers/RoutingServiceProvider.php** file.
 
 ```diff
 <?php
@@ -118,7 +118,9 @@ Visit : http://localhost:8000/api/posts
 
 ### Post show endpoint
 
-1. Open the ApiPostController :
+1. Modify the **ApiPostController** controller.
+
+In **src/Controller/ApiPostController.php** file :
 
 ```php
 <?php
@@ -133,7 +135,9 @@ class ApiPostController extends BaseController
 }
 ```
 
-2. Open the RoutingServiceProvider :
+2. Open the **RoutingServiceProvider** provider.
+
+In **src/Providers/RoutingServiceProvider.php** file :
 
 ```diff
 <?php
@@ -180,9 +184,9 @@ npm i react react-dom react-admin node-sass sass-loader css-loader style-loader
 
 ### Config webpack
 
-1. Create webpack.config.js
+1. Create a **webpack.config.js** file.
 
-```javascript
+```js
 const path = require('path')
 
 const config = {
@@ -227,7 +231,7 @@ const config = {
 module.exports = config
 ```
 
-2. Create the Babel configuration file .babelrc
+2. Create a Babel configuration **.babelrc** file. 
 
 ```json
 {
@@ -238,7 +242,8 @@ module.exports = config
 }
 ```
 
-3. Add script to package json
+3. Add scripts in **package.json** file.
+
 ```diff
 {
 // ...  
@@ -254,7 +259,7 @@ module.exports = config
 
 ### The Front-end layout
 
-1. Modify resources/views/index.plates.php
+1. Modify the **resources/views/index.plates.php** file.
 
 ```diff
 <?php
@@ -278,7 +283,7 @@ module.exports = config
 
 2. Create the Front-end entry JS file
 
-Create resources/assets/js/app.jsx entry file.
+Create a **resources/assets/js/app.jsx** entry file.
 
 ```jsx
 import React from 'react'
@@ -293,7 +298,7 @@ render(<App username={username}/>, $app)
 
 3. Create the Front-end react component
 
-Create resources/assets/js/app/components/App.jsx component file.
+Create a **resources/assets/js/app/components/App.jsx** component file.
 
 ```jsx
 import React from 'react'
@@ -305,14 +310,18 @@ export default function ({username}) {
 
 4. Start the webpack dev server
 
-Webpack Dev Server serve assets in memory, to check assets generation visit :
+```bash
+npm run serve
+```
+
+Webpack Dev Server serve assets in memory, to check assets generated visit :
 http://localhost:9000/webpack-dev-server
 
-5. Visit : http://localhost:8000
+5. Visit the application front-end : http://localhost:8000
 
 ### The Back-end layout
 
-1. Create resources/views/admin.plates.php
+1. Create a **resources/views/admin.plates.php** file.
 
 ```php
 <?php
@@ -333,7 +342,7 @@ http://localhost:9000/webpack-dev-server
 </html>
 ```
 
-2. Create the admin route
+2. Create an admin route
 
 Change the RoutingServiceProvider
 
@@ -355,6 +364,144 @@ class RoutingServiceProvider extends BootableServiceProvider
 }
 ```
 
+3. Create a Back-end entry JS file
+
+Create **resources/assets/js/admin.jsx** entry file.
+
+```jsx
+import React from 'react'
+import {render} from 'react-dom'
+import App from './admin/components/App'
+import '../scss/admin.scss'
+
+render(<App/>, document.getElementById('app'))
+```
+
+4. Create a Back-end react component
+
+Create a **resources/assets/js/admin/components/App.jsx** component file.
+
+```jsx
+import * as React from 'react'
+import { Admin, Resource, ListGuesser } from 'react-admin'
+import DataProvider from '../DataProvider'
+
+const App = () => <Admin dataProvider={DataProvider} >
+  <Resource name="posts" list={ListGuesser} />
+</Admin>
+
+export default App
+```
+
+5. Create a DataProvider
+
+A DataProvider allow react-admin to interact with your API.
+
+[more-informations](https://marmelab.com/react-admin/Tutorial.html#connecting-to-a-real-api)
+
+Create a **resources/assets/js/admin/DataProvider.js** provider file.
+
+```js
+import { fetchUtils } from 'react-admin'
+import { stringify } from 'query-string'
+
+const apiUrl = 'http://localhost:8000/api'
+const httpClient = fetchUtils.fetchJson
+
+export default {
+  getList: (resource, params) => {
+    const { page, perPage } = params.pagination;
+    const { field, order } = params.sort;
+    const query = {
+      sort: JSON.stringify([field, order]),
+      range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
+      filter: JSON.stringify(params.filter),
+    };
+    const url = `${apiUrl}/${resource}?${stringify(query)}`;
+
+    return httpClient(url).then(({ headers, json }) => {
+      return {
+        data: json,
+        total: parseInt(headers.get('content-range').split('/').pop(), 10),
+      }
+    })
+  },
+
+  getOne: (resource, params) =>
+      httpClient(`${apiUrl}/${resource}/${params.id}`).then(({ json }) => ({
+        data: json,
+      })),
+
+  getMany: (resource, params) => {
+    const query = {
+      filter: JSON.stringify({ id: params.ids }),
+    };
+    const url = `${apiUrl}/${resource}?${stringify(query)}`;
+    return httpClient(url).then(({ json }) => ({ data: json }));
+  },
+
+  getManyReference: (resource, params) => {
+    const { page, perPage } = params.pagination;
+    const { field, order } = params.sort;
+    const query = {
+      sort: JSON.stringify([field, order]),
+      range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
+      filter: JSON.stringify({
+        ...params.filter,
+        [params.target]: params.id,
+      }),
+    };
+    const url = `${apiUrl}/${resource}?${stringify(query)}`;
+
+    return httpClient(url).then(({ headers, json }) => ({
+      data: json,
+      total: parseInt(headers.get('content-range').split('/').pop(), 10),
+    }));
+  },
+
+  update: (resource, params) =>
+      httpClient(`${apiUrl}/${resource}/${params.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(params.data),
+      }).then(({ json }) => ({ data: json })),
+
+  updateMany: (resource, params) => {
+    const query = {
+      filter: JSON.stringify({ id: params.ids}),
+    };
+    return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
+      method: 'PUT',
+      body: JSON.stringify(params.data),
+    }).then(({ json }) => ({ data: json }));
+  },
+
+  create: (resource, params) =>
+      httpClient(`${apiUrl}/${resource}`, {
+        method: 'POST',
+        body: JSON.stringify(params.data),
+      }).then(({ json }) => ({
+        data: { ...params.data, id: json.id },
+      })),
+
+  delete: (resource, params) =>
+      httpClient(`${apiUrl}/${resource}/${params.id}`, {
+        method: 'DELETE',
+      }).then(({ json }) => ({ data: json })),
+
+  deleteMany: (resource, params) => {
+    const query = {
+      filter: JSON.stringify({ id: params.ids}),
+    };
+    return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
+      method: 'DELETE',
+    }).then(({ json }) => ({ data: json }));
+  }
+};
+```
+
+6. Create a Back-end CSS stylesheet
+
+Create a resources/assets/scss/admin.scss file.
 
 ```scss
 body {

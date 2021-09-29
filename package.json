@@ -10,7 +10,7 @@
     "serve": "webpack serve",
     "hot": "npm run serve --hot",
     "dev": "webpack --progress",
-    "watch": "npm run development -- --watch",
+    "watch": "npm run dev -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

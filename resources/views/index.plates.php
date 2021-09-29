@@ -10,7 +10,7 @@
     <script src="http://localhost:9000/dist/app.js" defer></script>
 </head>
 <body>
-<div id="app" data-username="<?php echo $this->get('name'); ?>"><?php echo $this->get('name'); ?></div>
-<?php echo $this->asset_footer(); ?>
+    <div id="app" data-username="<?php echo $this->get('name'); ?>"></div>
+    <?php echo $this->asset_footer(); ?>
 </body>
 </html>
