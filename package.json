@@ -7,8 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "dev": "parcel resources/index.html",
-    "build": "parcel build resources/index.html --out-dir public/admin --public-url ./admin/",
+    "start": "webpack-dev-server --progress --hot",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,15 +22,23 @@
   },
   "homepage": "https://github.com/jordy-manner/lab-react-admin#readme",
   "dependencies": {
-    "prop-types": "^15.7.2",
-    "ra-data-json-server": "^3.18.2",
     "react": "^17.0.2",
     "react-admin": "^3.18.2",
     "react-dom": "^17.0.2",
     "swagger-ui": "^3.52.3"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.5",
-    "sass": "^1.42.1"
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@babel/preset-react": "^7.14.5",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^6.3.0",
+    "node-sass": "^6.0.1",
+    "sass": "^1.42.1",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.3.0",
+    "webpack": "^5.55.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.3.0"
   }
 }

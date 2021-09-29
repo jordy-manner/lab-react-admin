@@ -1,11 +1,23 @@
 # Lab React Admin
 
+## Install the Pollen Solutions application project skeleton
+
+```bash
+composer create-project pollen-solutions/skeleton lab-react-admin
+```
+
+## Serve the application
+
+```bash
+php -S 127.0.0.1:8000 -t public
+```
+
 ## Create the API server
 
 ### Post list endpoint
 
-1. Create the  src/Controller directory
-2. Create the ApiPostController.php file
+1. Create a src/Controller directory.
+2. Create an ApiPostController.php file.
 3. Write the ApiPostController and create the post list method :
 
 ```php
@@ -111,11 +123,9 @@ Visit : http://127.0.0.1:8000/api/posts
 ```php
 <?php
 // ...
-
 class ApiPostController extends BaseController
 {
     // ...
-    
     public function show($id): JsonResponseInterface
     {
         return $this->json($this->posts[0]);
@@ -127,17 +137,13 @@ class ApiPostController extends BaseController
 
 ```php
 <?php
-
 // ...
-
 class RoutingServiceProvider extends BootableServiceProvider
 {
     // ...
-    
     public function boot(): void
     {
         // ...
-
         $router->group('/api', function(RouteGroup $router) {
             // ...
             $router->get('posts/{id}', [ApiPostController::class, 'show']);
@@ -158,24 +164,83 @@ class RoutingServiceProvider extends BootableServiceProvider
 
 ## NPM Initialisation
 
-```bash
-npm init
-```
+### Install dependencies
+
+#### Development dependencies
 
 ```bash
-npm install react react-dom react-admin ra-data-json-server prop-types parcel-bundler
+npm i -D webpack webpack-cli webpack-dev-server @babel/core babel-loader @babel/preset-env @babel/preset-react
 ```
 
-Modify package.json
+#### Peer dependencies
+
+```bash
+npm i react react-dom react-admin node-sass sass-loader css-loader style-loader
+```
+
+### Config webpack
+
+1. Create webpack.config.js
+
+```javascript
+const path = require('path')
+
+const config = {
+  mode: 'development',
+  entry: {
+    'app': './resources/js/app.jsx',
+    'admin': './resources/js/admin.jsx'
+  },
+  output: {
+    filename: '[name].js',
+    publicPath: '/dist/'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: ['babel-loader'],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          "style-loader",
+          "css-loader",
+          "sass-loader"
+        ],
+        exclude: /node_modules/
+      }
+    ]
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
+    compress: true,
+    port: 9000
+  }
+}
+
+module.exports = config
+```
+
+2. Create the Babel configuration file .babelrc
 
 ```json
 {
-  "scripts": {
-    "dev": "parcel resources/index.html",
-    "build": "parcel build resources/index.html",
-  }
+  "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+  ]
 }
 ```
+
+
+
 
 ```html
 <!DOCTYPE html>
@@ -183,10 +248,10 @@ Modify package.json
 <head>
     <meta charset="UTF-8">
     <title>TEST</title>
+    <script src="dist/app.js" defer></script>
 </head>
 <body>
     <div id="root"></div>
-    <script src="js/index.js" defer></script>
 </body>
 </html>
 ```

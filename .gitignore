@@ -1,13 +1,28 @@
+## IDE
+/.idea/
+
+## CERBOT
+/.well-known/
+
+## OS HIDDEN
 .DS_Store
-/.idea
+
+## BINARIES
+/bin/wp-cli.phar
+/bin/composer.phar
+
+## PACKAGES
+### COMPOSER
+/vendor/
+/composer.lock
+### NPM
+/node_modules/
+/package-lock.json
+### YARN
+/yarn.lock
+
+## ENV
 /.env*
 !/.env.example
-/composer.lock
-/package-lock.json
-/yarn.lock
-/node_modules/
-/vendor/
 
-/.cache/
-/dist/
-/public/admin/
+
