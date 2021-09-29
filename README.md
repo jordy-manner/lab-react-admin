@@ -239,8 +239,16 @@ module.exports = config
 }
 ```
 
-
-
+3. Add script to package json
+```diff
+{
+// ...  
+  "scripts": {
++    "start": "webpack-dev-server --progress --hot",
+  }
+// ...
+}
+```
 
 ```html
 <!DOCTYPE html>
@@ -248,13 +256,17 @@ module.exports = config
 <head>
     <meta charset="UTF-8">
     <title>TEST</title>
-    <script src="dist/app.js" defer></script>
+    <script src="./dist/app.js" defer></script>
 </head>
 <body>
     <div id="root"></div>
 </body>
 </html>
 ```
+
+Webpack Dev Server serve assets in memory, to check assets generation visit :
+http://localhost:9000/webpack-dev-server
+
 
 ```scss
 body {
@@ -273,10 +285,3 @@ code {
 ```
 
 ## Prevent CORS
-
-
-
-
-```bash
-npm run dev
-```
