@@ -9,7 +9,7 @@ composer create-project pollen-solutions/skeleton lab-react-admin
 ## Serve the application
 
 ```bash
-php -S 127.0.0.1:8000 -t public
+php -S localhost:8000 -t public
 ```
 
 ## Create the API server
@@ -98,7 +98,7 @@ class RoutingServiceProvider extends BootableServiceProvider
 ## Launch and test the API server
 
 ```bash
-Visit : http://127.0.0.1:8000/api/posts
+Visit : http://localhost:8000/api/posts
 ```
 
 ```json
@@ -152,7 +152,7 @@ class RoutingServiceProvider extends BootableServiceProvider
 }
 ```
 
-3. Visit : http://127.0.0.1:8000/api/posts/1
+3. Visit : http://localhost:8000/api/posts/1
 
 ```json
 {
