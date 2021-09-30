@@ -12,7 +12,15 @@ class ApiPostController extends BaseController
 {
     public function list(): JsonResponseInterface
     {
-        $posts = DB::table('posts')->get()->all();
+        $r = $this->httpRequest();
+
+        $total = DB::table('posts')->count();
+
+        $query = DB::table('posts')
+            ->forPage($r->input('paged', 1), $r->input('per_page', 10))
+            ->orderBy($r->input('order_by', 'id'), $r->input('order_dir', 'ASC'));
+
+        $posts = $query->get()->all();
 
         $response = $this->json($posts);
 
@@ -22,7 +30,7 @@ class ApiPostController extends BaseController
             'Access-Control-Expose-Headers' => 'Content-Range'
         ]);*/
 
-        $response->headers->set('Content-Range', count($posts));
+        $response->headers->set('Content-Range', $total);
 
         return $response;
     }
