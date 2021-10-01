@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Pollen\Database\DatabaseManager as DB;
 use Pollen\Http\JsonResponseInterface;
 use Pollen\Routing\BaseController;
+use Pollen\Support\Proxy\DbProxy;
 
 class ApiPostController extends BaseController
 {
+    use DbProxy;
+
     public function list(): JsonResponseInterface
     {
         $r = $this->httpRequest();
 
-        $total = DB::table('posts')->count();
+        $total = $this->db('posts')->count();
 
-        $query = DB::table('posts')
+        $query = $this->db('posts')
             ->forPage($r->input('paged', 1), $r->input('per_page', 10))
             ->orderBy($r->input('order_by', 'id'), $r->input('order_dir', 'ASC'));
 
@@ -37,7 +39,7 @@ class ApiPostController extends BaseController
 
     public function show($id): JsonResponseInterface
     {
-        $post = DB::table('posts')->where('id', $id)->first();
+        $post = $this->db('posts')->where('id', $id)->first();
 
         return $this->json($post);
     }

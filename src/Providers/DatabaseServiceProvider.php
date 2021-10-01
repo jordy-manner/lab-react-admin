@@ -4,36 +4,29 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\App;
 use Illuminate\Database\Schema\Blueprint;
-use Pollen\Container\BootableServiceProvider;
-use Pollen\Database\DatabaseManagerInterface;
-use Pollen\Database\DatabaseManager as DB;
-use Pollen\Faker\FakerInterface;
+use Pollen\Kernel\Container\BootableServiceProvider;
 use Pollen\Support\DateTime;
+use Pollen\Support\Env;
+use Pollen\Support\Proxy\DbProxy;
+use Pollen\Support\Proxy\FakerProxy;
 
 class DatabaseServiceProvider extends BootableServiceProvider
 {
+    use DbProxy;
+    use FakerProxy;
+
     public function boot(): void
     {
-        /** @var App $app */
-        $app = $this->getContainer();
-
-        /** @var DatabaseManagerInterface $db */
-        $db = $app->get(DatabaseManagerInterface::class);
-
         // Database connection
-        $db->addConnection([
-            'driver'    => 'sqlite',
-            'database'  => $app->getBasePath('/var/database.sqlite'),
-            'prefix'    => 'r3c6t6dm_',
+        $this->db()->addConnection([
+            'url'    => Env::get('DATABASE_URL')
         ]);
-        $db->setAsGlobal();
+        $this->db()->setAsGlobal();
 
         // Database migration
-        $schema = DB::schema();
-        if (!$schema->hasTable('posts')) {
-            $schema->create('posts', function (Blueprint $table) {
+        if (!$this->schema()->hasTable('posts')) {
+            $this->schema()->create('posts', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('title');
                 $table->longText('content')->nullable();
@@ -42,18 +35,16 @@ class DatabaseServiceProvider extends BootableServiceProvider
         }
 
         // Database seeding
-        /** @var FakerInterface $faker */
-        $faker = $app->get(FakerInterface::class);
-        if (!DB::table('posts')->count()) {
+        if (!$this->db('posts')->count()) {
             $posts = [];
-            for ($i = 1; $i <=20; $i++) {
+            for ($i = 1; $i <= 20; $i++) {
                 $posts[] = [
-                    'title'      => $faker->sentence(),
-                    'content'    => $faker->paragraphs(4, true),
+                    'title'      => $this->faker()->sentence(),
+                    'content'    => $this->faker()->paragraphs(4, true),
                     'created_at' => DateTime::now(),
                 ];
             }
-            DB::table('posts')->insert($posts);
+            $this->db('posts')->insert($posts);
         }
     }
 }

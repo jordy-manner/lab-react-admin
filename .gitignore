@@ -1,15 +1,13 @@
 ## IDE
 /.idea/
 
-## CERBOT
-/.well-known/
-
-## OS HIDDEN
+## HIDDEN FILES
+.svn
+.svnignore
 .DS_Store
 
-## BINARIES
-/bin/wp-cli.phar
-/bin/composer.phar
+## CERBOT
+/.well-known/
 
 ## PACKAGES
 ### COMPOSER
@@ -22,7 +20,5 @@
 /yarn.lock
 
 ## ENV
-/.env*
-!/.env.example
-
-
+/.env.local
+/.env.*.local
